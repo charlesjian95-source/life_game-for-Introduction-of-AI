@@ -2,7 +2,7 @@
 #include<cstdlib>
 #include <thread>
 #include <chrono>
-#include <windows.h>
+//#include <windows.h>
 using namespace std;
 
 const int map_width = 30;
@@ -15,7 +15,7 @@ void buildBound(int mapp[][map_width]); //設置邊界 美觀用途
 int main()
 {
     int mapp[map_height][map_width] = {};
-    SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
+    //SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
 /*======================設置初始條件======================*/
 
     mapp[10][11] = 1;
@@ -37,7 +37,7 @@ int main()
         nextGen(mapp);
         showMap(mapp);
         this_thread::sleep_for(chrono::milliseconds(500));
-        system("cls");
+        //system("cls");
     }
 }
 /*======================主程式結束======================*/
