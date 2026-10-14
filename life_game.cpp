@@ -5,12 +5,13 @@
 //#include <windows.h>
 using namespace std;
 
-const int map_width = 30;
-const int map_height = 30;
+const int map_width = 100;
+const int map_height = 100;
 
 void showMap(int mapp[][map_width]);//展示當前的狀況
 void nextGen(int mapp[][map_width]);//根據康威規則進行迭代
 void buildBound(int mapp[][map_width]); //設置邊界 美觀用途
+void initMode(int mapp[][map_width]);
 
 int main()
 {
@@ -42,7 +43,57 @@ int main()
 }
 /*======================主程式結束======================*/
 
+/*======================初始化地圖======================*/
+void initMode(int mapp[][map_width]){
+    int mode＿ID;
+    cout << "input put mode you want";
+    cout <<"=====Still Life靜態模式=====\n";
+    cout << "1.Block\n" << "2.Beehive\n";
+    cout <<"=====Oscillator週期震盪模式=====\n";
+    cout<< "3.Blinker\n" << "4.Toad\n" << "5.Beacon\n"<< "6.Pulse\n"; 
+    cout<<"=====Spaceship滑翔機=====\n";
+    cout<< "7.Glider\n" << "8.LWSS\n"; 
+    cout <<"=====Methuselah長壽模式=====\n";;
+    cout<< "9.R-pentomino\n" << "10.Acorn\n";
+    cout <<"=====Gun產生器=====\n";
+    cout << "11.Gosper Glider Gun\n";
+    cout << ':';
+    cin >> mode＿ID;
 
+    switch(mode_ID)｛
+    case 1:
+        mapp[48][48] = 1;
+        mapp[48][49] = 1;
+        mapp[49][49] = 1;
+        mapp[49][48] = 1;
+        break;
+    case 2:
+        mapp[48][49] = 1;
+        mapp[48][50] = 1;
+        mapp[49][48] = 1;
+        mapp[49][51] = 1;
+        mapp[50][49] = 1;
+        mapp[50][50] = 1;
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    case 6:
+        break;
+    case 7:
+        break;
+    case 8:
+        break;
+    case 9:
+        break;
+    case 10:
+        break;
+    case 11:
+        break;
+}
 /*======================迭代函數======================*/
 void nextGen(int mapp[][map_width])
 {
