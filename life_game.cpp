@@ -2,11 +2,11 @@
 #include<cstdlib>
 #include <thread>
 #include <chrono>
-//#include <windows.h>
+#include <windows.h>
 using namespace std;
 
-const int map_width = 100;
-const int map_height = 100;
+const int map_width = 80;
+const int map_height = 80;
 
 void showMap(int mapp[][map_width]);//展示當前的狀況
 void nextGen(int mapp[][map_width]);//根據康威規則進行迭代
@@ -15,8 +15,10 @@ void initMode(int mapp[][map_width]); //初始化地圖 提供各模式選擇
 
 int main()
 {
+    ios::sync_with_stdio(false);
+    //cin.tie(nullptr);
     int mapp[map_height][map_width] = {};
-    //SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
+    SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
 /*======================設置初始條件======================*/
     /*
     mapp[10][11] = 1;
@@ -315,7 +317,7 @@ void showMap(int mapp[][map_width])
     }
     cout << "└";
     for(int i=1; i< map_width-1; i++){cout << "--";}
-    cout << "┘";
+    cout << "┘\n";
 }
 /*======================設置邊界======================*/
 void buildBound(int mapp[][map_width]){
