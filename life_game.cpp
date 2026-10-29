@@ -27,22 +27,34 @@ int main()
     const int cell_size = 20;
     const int x = map_width*cell_size;
     const int y = map_height*cell_size;
-    SetTargetFPS(10);//設定frame數 太大的話會迭代太快
+    int time_stop = 1;
+    int user_x = 40 , user_y = 40;
+    int user_path = 20;
+    SetTargetFPS(20);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway");
 /*======================函數開始執行======================*/
     //buildBound(mapp);
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
-        nextGen(mapp);
-
+        
+        if(time_stop == 1){nextGen(mapp);}
+        else{DrawText("Zawarudo!", 100, 100, 50, DARKGREEN);}
         for(int i=1; i<map_width-1; i++){ //接替showMap()
             for(int j=1; j<map_height-1; j++){
                 if(mapp[i][j]==1){
-                    DrawRectangle(i*cell_size,j*cell_size,15,15,WHITE);
+                    DrawRectangle(j*cell_size,i*cell_size,15,15,WHITE);
                 }
             }
         }
+
+        if(IsKeyPressed(KEY_RIGHT)) user_x+=user_path;
+        if(IsKeyPressed(KEY_LEFT)) user_x-=user_path;
+        if(IsKeyPressed(KEY_DOWN)) user_y+=user_path;
+        if(IsKeyPressed(KEY_UP)) user_y-=user_path;
+        if(IsKeyPressed(KEY_SPACE)) mapp[user_y / cell_size][user_x / cell_size] = 1;
+        if(IsKeyPressed(KEY_LEFT_CONTROL)) time_stop *=-1;
+        DrawRectangle(user_x,user_y,15,15,BLUE);
         EndDrawing();
     }
     CloseWindow();
