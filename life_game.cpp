@@ -21,29 +21,14 @@ int main()
     int mapp[map_height][map_width] = {};
     //SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
 /*======================設置初始條件======================*/
-    /*
-    mapp[10][11] = 1;
-    mapp[10][14] = 1;
-
-    mapp[11][10] = 1;
-
-    mapp[12][10] = 1;
-    mapp[12][14] = 1;
-
-    mapp[13][10] = 1;
-    mapp[13][11] = 1;
-    mapp[13][12] = 1;
-    mapp[13][13] = 1;
-    */
     initMode(mapp);
-    
-/*======================函數開始執行======================*/
-    //buildBound(mapp);
     const int cell_size = 20;
     const int x = map_width*cell_size;
     const int y = map_height*cell_size;
     SetTargetFPS(15);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway");
+/*======================函數開始執行======================*/
+    //buildBound(mapp);
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
@@ -56,8 +41,6 @@ int main()
                 }
             }
         }
-
-        //showMap(mapp);
         EndDrawing();
     }
     CloseWindow();
