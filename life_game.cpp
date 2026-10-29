@@ -1,31 +1,33 @@
 #include<iostream>
 #include<cstdlib>
-#include <thread>
-#include <chrono>
-//#include <windows.h>
+#include<thread>
+#include<chrono>
+#include<vector>
 #include<raylib.h>
+#include<string>
 using namespace std;
 
 const int map_width = 60;
 const int map_height = 60;
 
-void showMap(int mapp[][map_width]);//展示當前的狀況
+void showMap(int mapp[][map_width]);//展示當前的狀況(已停止使用)
 void nextGen(int mapp[][map_width]);//根據康威規則進行迭代
-void buildBound(int mapp[][map_width]); //設置邊界 美觀用途
+void buildBound(int mapp[][map_width]); //設置邊界 美觀用途(已停止使用)
 void initMode(int mapp[][map_width]); //初始化地圖 提供各模式選擇
+void loadMap(vector<string>template_map , int mapp[][map_width]);
 
 int main()
 {
     ios::sync_with_stdio(false);
     //cin.tie(nullptr);
     int mapp[map_height][map_width] = {};
-    //SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
+    
 /*======================設置初始條件======================*/
     initMode(mapp);
     const int cell_size = 20;
     const int x = map_width*cell_size;
     const int y = map_height*cell_size;
-    SetTargetFPS(15);//設定frame數 太大的話會迭代太快
+    SetTargetFPS(10);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway");
 /*======================函數開始執行======================*/
     //buildBound(mapp);
@@ -65,182 +67,119 @@ void initMode(int mapp[][map_width]){
     cin >> mode_ID;
 
     switch(mode_ID){
-    case 1:
-        mapp[48][48] = 1;
-        mapp[48][49] = 1;
-        mapp[49][49] = 1;
-        mapp[49][48] = 1;
+    case 1: { // Block
+        vector<string> template_map = {
+            "OO",
+            "OO"
+        };
+        loadMap(template_map, mapp);
         break;
-    case 2:
-        mapp[48][49] = 1;
-        mapp[48][50] = 1;
-        mapp[49][48] = 1;
-        mapp[49][51] = 1;
-        mapp[50][49] = 1;
-        mapp[50][50] = 1;
+    }
+    case 2: { // Beehive
+        vector<string> template_map = {
+            ".OO.",
+            "O..O",
+            ".OO."
+        };
+        loadMap(template_map, mapp);
         break;
-    case 3:
-        mapp[48][48] = 1;
-        mapp[48][49] = 1;
-        mapp[48][50] = 1;
+    }
+    case 3: { // Blinker
+        vector<string> template_map = {
+            "OOO"
+        };
+        loadMap(template_map, mapp);
         break;
-    case 4:
-        mapp[48][49] = 1;
-        mapp[48][50] = 1;
-        mapp[48][51] = 1;
-        mapp[49][48] = 1;
-        mapp[49][49] = 1;
-        mapp[49][50] = 1;
+    }
+    case 4: { // Toad
+        vector<string> template_map = {
+            ".OOO",
+            "OOO."
+        };
+        loadMap(template_map, mapp);
         break;
-    case 5:
-        mapp[48][48] = 1;
-        mapp[48][49] = 1;
-        mapp[49][48] = 1;
-        mapp[49][49] = 1;
-        mapp[50][50] = 1;
-        mapp[50][51] = 1;
-        mapp[51][50] = 1;
-        mapp[51][51] = 1;
+    }
+    case 5: { // Beacon
+        vector<string> template_map = {
+            "OO..",
+            "OO..",
+            "..OO",
+            "..OO"
+        };
+        loadMap(template_map, mapp);
         break;
-    case 6:
-        mapp[48][50] = 1;
-        mapp[48][51] = 1;
-        mapp[48][52] = 1;
-        mapp[48][56] = 1;
-        mapp[48][57] = 1;
-        mapp[48][58] = 1;
-
-        mapp[50][48] = 1;
-        mapp[50][53] = 1;
-        mapp[50][55] = 1;
-        mapp[50][60] = 1;
-
-        mapp[51][48] = 1;
-        mapp[51][53] = 1;
-        mapp[51][55] = 1;
-        mapp[51][60] = 1;
-
-        mapp[52][48] = 1;
-        mapp[52][53] = 1;
-        mapp[52][55] = 1;
-        mapp[52][60] = 1;
-
-        mapp[53][50] = 1;
-        mapp[53][51] = 1;
-        mapp[53][52] = 1;
-        mapp[53][56] = 1;
-        mapp[53][57] = 1;
-        mapp[53][58] = 1;
-
-        mapp[55][50] = 1;
-        mapp[55][51] = 1;
-        mapp[55][52] = 1;
-        mapp[55][56] = 1;
-        mapp[55][57] = 1;
-        mapp[55][58] = 1;
-
-        mapp[56][48] = 1;
-        mapp[56][53] = 1;
-        mapp[56][55] = 1;
-        mapp[56][60] = 1;
-
-        mapp[56][48] = 1;
-        mapp[56][53] = 1;
-        mapp[56][55] = 1;
-        mapp[56][60] = 1;
-
-        mapp[56][48] = 1;
-        mapp[56][53] = 1;
-        mapp[56][55] = 1;
-        mapp[56][60] = 1;
-
-        mapp[58][50] = 1;
-        mapp[58][51] = 1;
-        mapp[58][52] = 1;
-        mapp[58][56] = 1;
-        mapp[58][57] = 1;
-        mapp[58][58] = 1;
+    }
+    case 6: { // Pulsar
+        vector<string> template_map = {
+            "..OOO...OOO..",
+            ".............",
+            "O....O.O....O",
+            "O....O.O....O",
+            "O....O.O....O",
+            "..OOO...OOO..",
+            ".............",
+            "..OOO...OOO..",
+            "O....O.O....O",
+            "O....O.O....O",
+            "O....O.O....O",
+            ".............",
+            "..OOO...OOO.."
+        };
+        loadMap(template_map, mapp);
         break;
-    case 7:
-        mapp[40][41] = 1;
-        mapp[41][42] = 1;
-        mapp[42][40] = 1;
-        mapp[42][41] = 1;
-        mapp[42][42] = 1;
+    }
+    case 7: { // Glider
+        vector<string> template_map = {
+            ".O.",
+            "..O",
+            "OOO"
+        };
+        loadMap(template_map, mapp);
         break;
-    case 8:
-        mapp[45][66] = 1;
-        mapp[45][69] = 1;
-        mapp[46][65] = 1;
-        mapp[47][65] = 1;
-        mapp[47][69] = 1;
-        mapp[48][65] = 1;
-        mapp[48][66] = 1;
-        mapp[48][67] = 1;
-        mapp[48][68] = 1;
+    }
+    case 8: { // LWSS
+        vector<string> template_map = {
+            ".O..O",
+            "O....",
+            "O...O",
+            "OOOO."
+        };
+        loadMap(template_map, mapp);
         break;
-    case 9:
-        mapp[48][49] = 1;
-        mapp[48][50] = 1;
-        mapp[49][48] = 1;
-        mapp[49][49] = 1;
-        mapp[50][49] = 1;
+    }
+    case 9: { // R-pentomino
+        vector<string> template_map = {
+            ".OO",
+            "OO.",
+            ".O."
+        };
+        loadMap(template_map, mapp);
         break;
-    case 10:
-        mapp[48][46] = 1;
-        mapp[49][48] = 1;
-        mapp[50][45] = 1;
-        mapp[50][46] = 1;
-        mapp[50][49] = 1;
-        mapp[50][50] = 1;
-        mapp[50][51] = 1;
+    }
+    case 10: { // Acorn
+        vector<string> template_map = {
+            ".O.....",
+            "...O...",
+            "OO..OOO"
+        };
+        loadMap(template_map, mapp);
         break;
-    case 11:
-        mapp[20][34] = 1;
-
-        mapp[21][32] = 1;
-        mapp[21][34] = 1;
-
-        mapp[22][22] = 1;
-        mapp[22][23] = 1;
-        mapp[22][30] = 1;
-        mapp[22][31] = 1;
-        mapp[22][44] = 1;
-        mapp[22][45] = 1;
-
-        mapp[23][21] = 1;
-        mapp[23][25] = 1;
-        mapp[23][30] = 1;
-        mapp[23][31] = 1;
-        mapp[23][44] = 1;
-        mapp[23][45] = 1;
-
-        mapp[24][10] = 1;
-        mapp[24][11] = 1;
-        mapp[24][20] = 1;
-        mapp[24][26] = 1;
-        mapp[24][30] = 1;
-        mapp[24][31] = 1;
-
-        mapp[25][10] = 1;
-        mapp[25][11] = 1;
-        mapp[25][20] = 1;
-        mapp[25][24] = 1;
-        mapp[25][26] = 1;
-        mapp[25][27] = 1;
-        mapp[25][32] = 1;
-        mapp[25][34] = 1;
-
-        mapp[26][20] = 1;
-        mapp[26][26] = 1;
-        mapp[26][34] = 1;
-
-        mapp[27][21] = 1;
-        mapp[27][25] = 1;
-
-        mapp[28][22] = 1;
-        mapp[28][23] = 1;
+    }
+    case 11: { // Gosper Glider Gun
+        vector<string> template_map = {
+            "........................O...........",
+            "......................O.O...........",
+            "............OO......OO............OO",
+            "...........O...O....OO............OO",
+            "OO........O.....O...OO..............",
+            "OO........O...O.OO....O.O...........",
+            "..........O.....O.......O...........",
+            "...........O...O....................",
+            "............OO......................"
+        };
+        loadMap(template_map, mapp);
         break;
+    }
     }
     
 }
@@ -327,4 +266,20 @@ void buildBound(int mapp[][map_width]){
     mapp[map_height-1][map_width-1] = -1;
     mapp[0][map_width-1] = -1;
     mapp[map_height-1][0] = -1;
+}
+
+/*======================初始化地圖(載入模板)======================*/
+void loadMap(vector<string>template_map,int mapp[][map_width]){
+    int height = template_map.size();
+    int width = template_map[0].size();
+    int h_begin = (map_height - height)/2;
+    int w_begin = (map_width - width)/2;
+    for(int i =0; i<height; i++){
+        for(int j=0; j<width; j++){
+            if(template_map[i][j] == 'O'){
+                mapp[h_begin + i][w_begin + j] = 1;
+            }
+            
+        }
+    }
 }
