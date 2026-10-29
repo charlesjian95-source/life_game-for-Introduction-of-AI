@@ -2,11 +2,12 @@
 #include<cstdlib>
 #include <thread>
 #include <chrono>
-#include <windows.h>
+//#include <windows.h>
+#include<raylib.h>
 using namespace std;
 
-const int map_width = 80;
-const int map_height = 80;
+const int map_width = 60;
+const int map_height = 60;
 
 void showMap(int mapp[][map_width]);//展示當前的狀況
 void nextGen(int mapp[][map_width]);//根據康威規則進行迭代
@@ -18,7 +19,7 @@ int main()
     ios::sync_with_stdio(false);
     //cin.tie(nullptr);
     int mapp[map_height][map_width] = {};
-    SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
+    //SetConsoleOutputCP(CP_UTF8); //編碼設置為UTF-8 確保邊界符號可以正常顯示(應該可以)
 /*======================設置初始條件======================*/
     /*
     mapp[10][11] = 1;
@@ -35,15 +36,31 @@ int main()
     mapp[13][13] = 1;
     */
     initMode(mapp);
-
+    
 /*======================函數開始執行======================*/
-    buildBound(mapp);
-    while(true){
+    //buildBound(mapp);
+    const int cell_size = 20;
+    const int x = map_width*cell_size;
+    const int y = map_height*cell_size;
+    SetTargetFPS(15);//設定frame數 太大的話會迭代太快
+    InitWindow(x,y,"conway");
+    while(!WindowShouldClose()){
+        BeginDrawing();
+        ClearBackground(BLACK);
         nextGen(mapp);
-        showMap(mapp);
-        this_thread::sleep_for(chrono::milliseconds(500));
-        //system("cls");
+
+        for(int i=1; i<map_width-1; i++){ //接替showMap()
+            for(int j=1; j<map_height-1; j++){
+                if(mapp[i][j]==1){
+                    DrawRectangle(i*cell_size,j*cell_size,15,15,WHITE);
+                }
+            }
+        }
+
+        //showMap(mapp);
+        EndDrawing();
     }
+    CloseWindow();
 }
 /*======================主程式結束======================*/
 
