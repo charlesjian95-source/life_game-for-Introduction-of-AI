@@ -47,6 +47,7 @@ int main()
         switch(page){
             case Page::Menu :{
                 mode = menuPage(page,mapp);
+                if(mode == 12){CloseWindow; return 0;}
                 initMode(mapp,mode);
                 page = Page::Game;
                 break;
@@ -83,13 +84,14 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
         DrawText("9.R-pentomin" , x, y+8*d  , size , WHITE);
         DrawText("10.Acorn" , x , y+9*d  , size , WHITE);
         DrawText("11.Gosper Glider Gun" , x , y+10*d  , size , WHITE);
+        DrawText("QUIT" , x , y+11*d  , size , WHITE);
         DrawText("use up/down to move arrow" , x-100 ,y+12*d ,size , BLUE );
         DrawText("use Space to choose mode" , x-100 ,y+13*d ,size , BLUE );
 
         /*===============操作===============*/
         if(IsKeyPressed(KEY_UP) && button_y>y)button_y-=d;
-        if(IsKeyPressed(KEY_DOWN) && button_y<y+10*d)button_y+=d;
-        if(IsKeyPressed(KEY_SPACE)) return (button_x/size);
+        if(IsKeyPressed(KEY_DOWN) && button_y<y+11*d)button_y+=d;
+        if(IsKeyPressed(KEY_SPACE)) return ((button_y-y)/size+1);
         DrawText("->", button_x , button_y,size , BLUE);
         EndDrawing(); 
     }
