@@ -54,6 +54,7 @@ int main()
             }
             case Page::Game :{
                 gamePage(mapp,user_x,user_y,time_stop);
+                page = Page::Menu;
                 break;
             }
         }
@@ -116,13 +117,13 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
             }
         }
 
-        if(IsKeyPressed(KEY_RIGHT)) user_x+=user_path;
-        if(IsKeyPressed(KEY_LEFT)) user_x-=user_path;
-        if(IsKeyPressed(KEY_DOWN)) user_y+=user_path;
-        if(IsKeyPressed(KEY_UP)) user_y-=user_path;
+        if(IsKeyPressed(KEY_RIGHT)&&user_x+2*user_path <=x) user_x+=user_path;
+        if(IsKeyPressed(KEY_LEFT)&&user_x-user_path >=0) user_x-=user_path;
+        if(IsKeyPressed(KEY_DOWN)&&user_y + 2*user_path <=y) user_y+=user_path;
+        if(IsKeyPressed(KEY_UP)&&user_y - user_path >=0) user_y-=user_path;
         if(IsKeyPressed(KEY_SPACE)) mapp[user_y / cell_size][user_x / cell_size] = 1;
         if(IsKeyPressed(KEY_LEFT_CONTROL)) time_stop *=-1;
-
+        if(IsKeyPressed(KEY_Q)){break;}
         DrawRectangle(user_x,user_y,cell_size-5,cell_size-5,BLUE);
         
         EndDrawing();
@@ -145,7 +146,9 @@ void initMode(int mapp[][map_width] , int mode_ID){
     cout << "11.Gosper Glider Gun\n";
     cout << ":";
     cin >> mode_ID;*/
-
+    for(int i=0; i<map_height; i++){
+        for(int j=0; j<map_width; j++){mapp[i][j]=0;}
+    }
     switch(mode_ID){
     case 1: { // Block
         vector<string> template_map = {
