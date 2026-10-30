@@ -7,8 +7,8 @@
 #include<string>
 using namespace std;
 
-const int map_width = 70;
-const int map_height = 70;
+const int map_width = 60;
+const int map_height = 60;
 const int cell_size = 20; //細胞大小(會顯示的大小n*n)
 const int x = map_width*cell_size; //地圖長寬
 const int y = map_height*cell_size;  
@@ -22,10 +22,10 @@ enum class Page{ //使用的page
 void showMap(int mapp[][map_width]);//展示當前的狀況(已停止使用)
 void nextGen(int mapp[][map_width]);//根據康威規則進行迭代
 void buildBound(int mapp[][map_width]); //設置邊界 美觀用途(已停止使用)
-void initMode(int mapp[][map_width]); //初始化地圖 提供各模式選擇
+void initMode(int mapp[][map_width],int mode_ID); //初始化地圖 提供各模式選擇
 void loadMap(vector<string>template_map , int mapp[][map_width]);
-void gamePage(Page &page , int mapp[][map_width],int &user_x , int &user_y,int &time_stop);
-void menuPage(Page &page , int mapp[][map_width]);
+void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop);
+int menuPage(Page &page , int mapp[][map_width]);
 
 
 int main()
@@ -35,59 +35,97 @@ int main()
     int mapp[map_height][map_width] = {};
     
 /*======================設置初始條件======================*/
-    initMode(mapp);
+    //initMode(mapp);
 
     int time_stop = 1; //檢測是否暫停迭代 1:迭代 -1:暫停
     int user_x = 40 , user_y = 40;
+    int mode = 0;
     
-    Page page = Page::Game;//初始化頁面
+    Page page = Page::Menu;//初始化頁面
     SetTargetFPS(20);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway"); //設定地圖大小跟標題名稱
 /*======================函數開始執行======================*/
     //buildBound(mapp);
     while(!WindowShouldClose()){
-        BeginDrawing();
-        ClearBackground(BLACK); //背景設定
+        //BeginDrawing();
+        //ClearBackground(BLACK); //背景設定
         switch(page){
             case Page::Menu :{
+                mode = menuPage(page,mapp);
+                initMode(mapp,mode);
+                page = Page::Game;
                 break;
             }
             case Page::Game :{
-                gamePage(page,mapp,user_x,user_y,time_stop);
+                gamePage(mapp,user_x,user_y,time_stop);
                 break;
             }
         }
 
-        DrawRectangle(user_x,user_y,15,15,BLUE);
-        EndDrawing();
+       
+        //EndDrawing();
     }
     CloseWindow();
 }
 /*======================主程式結束======================*/
 /*======================MenuPage設計======================*/
-
+int menuPage(Page &page , int mapp[][map_width]){ //待完成
+    int x =400;
+    const int button_x = x-50;
+    int button_y = 40;
+    while(true){
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("1.Block" , x , 40  , 30 , WHITE);
+        DrawText("2.Beehive" , x , 80  , 30 , WHITE);
+        DrawText("3.Blinker" , x , 120  , 30 , WHITE);
+        DrawText("4.Toad" , x , 160  , 30 , WHITE);
+        DrawText("5.Beacon" , x , 200  , 30 , WHITE);
+        DrawText("6.Pulse" , x , 240  , 30 , WHITE);
+        DrawText("7.Glider" , x , 280  , 30 , WHITE);
+        DrawText("8.LWSS" , x , 320  , 30 , WHITE);
+        DrawText("9.R-pentomin" , x, 360  , 30 , WHITE);
+        DrawText("10.Acorn" , x , 400  , 30 , WHITE);
+        DrawText("11.Gosper Glider Gun" , x , 440  , 30 , WHITE);
+        if(IsKeyPressed(KEY_UP) && button_y>40)button_y-=40;
+        if(IsKeyPressed(KEY_DOWN) && button_y<440)button_y+=40;
+        if(IsKeyPressed(KEY_SPACE)) return (button_x/40);
+        DrawText("->", button_x , button_y,30 , BLUE);
+        EndDrawing(); 
+    }
+    
+}
 /*======================gamePage設計======================*/
-void gamePage(Page &page , int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
-    if(time_stop == 1){nextGen(mapp);}
-    else{DrawText("Zawarudo!", 100, 100, 50, DARKGREEN);}
-    for(int i=1; i<map_width-1; i++){ //接替showMap()
-        for(int j=1; j<map_height-1; j++){
-            if(mapp[i][j]==1){
-                    DrawRectangle(j*cell_size,i*cell_size,15,15,WHITE);
+void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
+    while(true){
+        BeginDrawing();
+        ClearBackground(BLACK);
+        if(time_stop == 1){nextGen(mapp);}
+        else{DrawText("Zawarudo!", 100, 100, 50, DARKGREEN);}
+        for(int i=1; i<map_width-1; i++){ //接替showMap()
+            for(int j=1; j<map_height-1; j++){
+                if(mapp[i][j]==1){
+                        DrawRectangle(j*cell_size,i*cell_size,cell_size-5,cell_size-5,WHITE);
+                }
             }
         }
-    }
 
-    if(IsKeyPressed(KEY_RIGHT)) user_x+=user_path;
-    if(IsKeyPressed(KEY_LEFT)) user_x-=user_path;
-    if(IsKeyPressed(KEY_DOWN)) user_y+=user_path;
-    if(IsKeyPressed(KEY_UP)) user_y-=user_path;
-    if(IsKeyPressed(KEY_SPACE)) mapp[user_y / cell_size][user_x / cell_size] = 1;
-    if(IsKeyPressed(KEY_LEFT_CONTROL)) time_stop *=-1;    
+        if(IsKeyPressed(KEY_RIGHT)) user_x+=user_path;
+        if(IsKeyPressed(KEY_LEFT)) user_x-=user_path;
+        if(IsKeyPressed(KEY_DOWN)) user_y+=user_path;
+        if(IsKeyPressed(KEY_UP)) user_y-=user_path;
+        if(IsKeyPressed(KEY_SPACE)) mapp[user_y / cell_size][user_x / cell_size] = 1;
+        if(IsKeyPressed(KEY_LEFT_CONTROL)) time_stop *=-1;
+
+        DrawRectangle(user_x,user_y,cell_size-5,cell_size-5,BLUE);
+        
+        EndDrawing();
+    }   
 }
 /*======================初始化地圖======================*/
-void initMode(int mapp[][map_width]){
-    int mode_ID;
+void initMode(int mapp[][map_width] , int mode_ID){
+    //int mode_ID;
+    /*
     cout << "input put mode you want";
     cout <<"=====Still Life靜態模式=====\n";
     cout << "1.Block\n" << "2.Beehive\n";
@@ -99,8 +137,8 @@ void initMode(int mapp[][map_width]){
     cout<< "9.R-pentomino\n" << "10.Acorn\n";
     cout <<"=====Gun產生器=====\n";
     cout << "11.Gosper Glider Gun\n";
-    cout << ':';
-    cin >> mode_ID;
+    cout << ":";
+    cin >> mode_ID;*/
 
     switch(mode_ID){
     case 1: { // Block
