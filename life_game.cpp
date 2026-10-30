@@ -47,7 +47,7 @@ int main()
         switch(page){
             case Page::Menu :{
                 mode = menuPage(page,mapp);
-                if(mode == 12){CloseWindow; return 0;}
+                if(mode == 12){CloseWindow(); return 0;}
                 initMode(mapp,mode);
                 page = Page::Game;
                 break;
@@ -71,7 +71,7 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
     const int button_x = x-50; 
     int button_y = y;
     /*===============選單===============*/
-    while(true){
+    while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
         DrawText("1.Block" , x , y+0*d  , size , WHITE);
@@ -100,7 +100,7 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
 }
 /*======================gamePage設計======================*/
 void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
-    while(true){
+    while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
         DrawText("up/down/left/right:move",300,100,20 , WHITE);
@@ -123,7 +123,7 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
         if(IsKeyPressed(KEY_UP)&&user_y - user_path >=0) user_y-=user_path;
         if(IsKeyPressed(KEY_SPACE)) mapp[user_y / cell_size][user_x / cell_size] = 1;
         if(IsKeyPressed(KEY_LEFT_CONTROL)) time_stop *=-1;
-        if(IsKeyPressed(KEY_Q)){break;}
+        if(IsKeyPressed(KEY_Q)){EndDrawing();break;}
         DrawRectangle(user_x,user_y,cell_size-5,cell_size-5,BLUE);
         
         EndDrawing();
