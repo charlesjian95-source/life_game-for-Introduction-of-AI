@@ -92,11 +92,11 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
         /*===============操作===============*/
         if(IsKeyPressed(KEY_UP) && button_y>y)button_y-=d;
         if(IsKeyPressed(KEY_DOWN) && button_y<y+11*d)button_y+=d;
-        if(IsKeyPressed(KEY_SPACE)) return ((button_y-y)/size+1);
+        if(IsKeyPressed(KEY_SPACE)){EndDrawing(); return((button_y-y)/size+1);}
         DrawText("->", button_x , button_y,size , BLUE);
         EndDrawing(); 
     }
-    
+    return 12;
 }
 /*======================gamePage設計======================*/
 void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
@@ -106,7 +106,8 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
         DrawText("up/down/left/right:move",300,100,20 , WHITE);
         DrawText("L-ctrl:Stop time",300,120,20 , WHITE);
         DrawText("Spcae:create(only work when time stop)",300,140,20 , WHITE);
-        DrawText("In fact,If you create life when time moving.It will die immeditely",300,160,20 , WHITE);
+        DrawText("Q:Back to menu",300,160,20 , WHITE);
+        DrawText("In fact,If you create life when time moving.It will die immeditely",300,180,20 , WHITE);
         if(time_stop == 1){nextGen(mapp);}
         else{DrawText("Zawarudo!", 450,550 , 50, DARKGREEN);}
         for(int i=1; i<map_width-1; i++){ //接替showMap()
