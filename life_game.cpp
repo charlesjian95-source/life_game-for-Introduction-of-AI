@@ -5,6 +5,7 @@
 #include<vector>
 #include<raylib.h>
 #include<string>
+
 using namespace std;
 
 const int map_width = 60;
@@ -31,12 +32,9 @@ int menuPage(Page &page , int mapp[][map_width]);
 int main()
 {
     ios::sync_with_stdio(false);
-    //cin.tie(nullptr);
-    int mapp[map_height][map_width] = {};
-    
+    cin.tie(nullptr);
 /*======================設置初始條件======================*/
-    //initMode(mapp);
-
+    int mapp[map_height][map_width] = {};
     int time_stop = 1; //檢測是否暫停迭代 1:迭代 -1:暫停
     int user_x = 40 , user_y = 40;
     int mode = 0;
@@ -45,10 +43,7 @@ int main()
     SetTargetFPS(20);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway"); //設定地圖大小跟標題名稱
 /*======================函數開始執行======================*/
-    //buildBound(mapp);
     while(!WindowShouldClose()){
-        //BeginDrawing();
-        //ClearBackground(BLACK); //背景設定
         switch(page){
             case Page::Menu :{
                 mode = menuPage(page,mapp);
@@ -61,36 +56,41 @@ int main()
                 break;
             }
         }
-
-       
-        //EndDrawing();
     }
     CloseWindow();
 }
 /*======================主程式結束======================*/
 /*======================MenuPage設計======================*/
 int menuPage(Page &page , int mapp[][map_width]){ //待完成
-    int x =400;
-    const int button_x = x-50;
-    int button_y = 40;
+    /*===============設置文字大小、間距、位置等等===============*/
+    const int x =400;
+    const int y = 300, d = 40; //d是間距
+    const int size = 40;
+    const int button_x = x-50; 
+    int button_y = y;
+    /*===============選單===============*/
     while(true){
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawText("1.Block" , x , 40  , 30 , WHITE);
-        DrawText("2.Beehive" , x , 80  , 30 , WHITE);
-        DrawText("3.Blinker" , x , 120  , 30 , WHITE);
-        DrawText("4.Toad" , x , 160  , 30 , WHITE);
-        DrawText("5.Beacon" , x , 200  , 30 , WHITE);
-        DrawText("6.Pulse" , x , 240  , 30 , WHITE);
-        DrawText("7.Glider" , x , 280  , 30 , WHITE);
-        DrawText("8.LWSS" , x , 320  , 30 , WHITE);
-        DrawText("9.R-pentomin" , x, 360  , 30 , WHITE);
-        DrawText("10.Acorn" , x , 400  , 30 , WHITE);
-        DrawText("11.Gosper Glider Gun" , x , 440  , 30 , WHITE);
-        if(IsKeyPressed(KEY_UP) && button_y>40)button_y-=40;
-        if(IsKeyPressed(KEY_DOWN) && button_y<440)button_y+=40;
-        if(IsKeyPressed(KEY_SPACE)) return (button_x/40);
-        DrawText("->", button_x , button_y,30 , BLUE);
+        DrawText("1.Block" , x , y+0*d  , size , WHITE);
+        DrawText("2.Beehive" , x , y+1*d  , size , WHITE);
+        DrawText("3.Blinker" , x , y+2*d  , size , WHITE);
+        DrawText("4.Toad" , x , y+3*d  , size , WHITE);
+        DrawText("5.Beacon" , x , y+4*d  , size , WHITE);
+        DrawText("6.Pulse" , x , y+5*d  , size , WHITE);
+        DrawText("7.Glider" , x , y+6*d  , size , WHITE);
+        DrawText("8.LWSS" , x , y+7*d  , size , WHITE);
+        DrawText("9.R-pentomin" , x, y+8*d  , size , WHITE);
+        DrawText("10.Acorn" , x , y+9*d  , size , WHITE);
+        DrawText("11.Gosper Glider Gun" , x , y+10*d  , size , WHITE);
+        DrawText("use up/down to move arrow" , x-100 ,y+12*d ,size , BLUE );
+        DrawText("use Space to choose mode" , x-100 ,y+13*d ,size , BLUE );
+
+        /*===============操作===============*/
+        if(IsKeyPressed(KEY_UP) && button_y>y)button_y-=d;
+        if(IsKeyPressed(KEY_DOWN) && button_y<y+10*d)button_y+=d;
+        if(IsKeyPressed(KEY_SPACE)) return (button_x/size);
+        DrawText("->", button_x , button_y,size , BLUE);
         EndDrawing(); 
     }
     
@@ -100,8 +100,12 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
     while(true){
         BeginDrawing();
         ClearBackground(BLACK);
+        DrawText("up/down/left/right:move",300,100,20 , WHITE);
+        DrawText("L-ctrl:Stop time",300,120,20 , WHITE);
+        DrawText("Spcae:create(only work when time stop)",300,140,20 , WHITE);
+        DrawText("In fact,If you create life when time moving.It will die immeditely",300,160,20 , WHITE);
         if(time_stop == 1){nextGen(mapp);}
-        else{DrawText("Zawarudo!", 100, 100, 50, DARKGREEN);}
+        else{DrawText("Zawarudo!", 450,550 , 50, DARKGREEN);}
         for(int i=1; i<map_width-1; i++){ //接替showMap()
             for(int j=1; j<map_height-1; j++){
                 if(mapp[i][j]==1){
