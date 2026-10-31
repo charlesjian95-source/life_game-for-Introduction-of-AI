@@ -107,7 +107,8 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
         DrawText("L-ctrl:Stop time",300,120,20 , WHITE);
         DrawText("Spcae:create(only work when time stop)",300,140,20 , WHITE);
         DrawText("Q:Back to menu",300,160,20 , WHITE);
-        DrawText("In fact,If you create life when time moving.It will die immeditely",300,180,20 , WHITE);
+        DrawText("L-ALT:Delete life",300,180,20 , WHITE);
+        DrawText("In fact,If you create life when time moving.It will die immeditely",300,200,20 , WHITE);
         if(time_stop == 1){nextGen(mapp);}
         else{DrawText("Zawarudo!", 450,550 , 50, DARKGREEN);}
         for(int i=1; i<map_width-1; i++){ //接替showMap()
@@ -123,6 +124,7 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
         if(IsKeyPressed(KEY_DOWN)&&user_y + 2*user_path <=y) user_y+=user_path;
         if(IsKeyPressed(KEY_UP)&&user_y - user_path >=0) user_y-=user_path;
         if(IsKeyPressed(KEY_SPACE)) mapp[user_y / cell_size][user_x / cell_size] = 1;
+        if(IsKeyPressed(KEY_LEFT_ALT)) mapp[user_y / cell_size][user_x / cell_size] = 0;
         if(IsKeyPressed(KEY_LEFT_CONTROL)) time_stop *=-1;
         if(IsKeyPressed(KEY_Q)){EndDrawing();break;}
         DrawRectangle(user_x,user_y,cell_size-5,cell_size-5,BLUE);
