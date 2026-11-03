@@ -17,7 +17,8 @@ int user_path = 20;
 
 enum class Page{ //使用的page
     Menu,
-    Game
+    Game,
+    Egg
 };
 
 void showMap(int mapp[][map_width]);//展示當前的狀況(已停止使用)
@@ -27,6 +28,7 @@ void initMode(int mapp[][map_width],int mode_ID); //初始化地圖 提供各模
 void loadMap(vector<string>template_map , int mapp[][map_width]);
 void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop);
 int menuPage(Page &page , int mapp[][map_width]);
+void eggPage();
 
 
 int main()
@@ -42,11 +44,18 @@ int main()
     Page page = Page::Menu;//初始化頁面
     SetTargetFPS(20);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway"); //設定地圖大小跟標題名稱
+
+
+
+    
+
+    
 /*======================函數開始執行======================*/
     while(!WindowShouldClose()){
         switch(page){
             case Page::Menu :{
                 mode = menuPage(page,mapp);
+                if(page == Page::Egg) break;
                 if(mode == 13){CloseWindow(); return 0;}
                 initMode(mapp,mode);
                 page = Page::Game;
@@ -57,11 +66,57 @@ int main()
                 page = Page::Menu;
                 break;
             }
+            case Page::Egg :{
+                eggPage();
+                page = Page::Menu;
+                break;
+            }
         }
     }
     CloseWindow();
 }
 /*======================主程式結束======================*/
+/*======================EggPage設計======================*/
+void eggPage(){
+    const char* text = "蔡教授那麼帥應該會給我們一百分吧";
+    const char* fontPath = "fonts/LXGWWenKaiMonoTC-Regular.ttf";
+    const float fontSize = 360.0f;
+    const double secondsPerCharacter = 0.5;
+    int count = 0;
+    int* codepoints = LoadCodepoints(text, &count);
+    Font chineseFont = LoadFontEx(fontPath, static_cast<int>(fontSize), codepoints, count);
+    const bool fontLoaded = codepoints != nullptr && count > 0 &&
+                            IsFontValid(chineseFont) &&
+                            chineseFont.texture.id != GetFontDefault().texture.id;
+    const double startedAt = GetTime();
+
+    while(!WindowShouldClose()){
+        const bool backToMenu = IsKeyPressed(KEY_Q);
+        BeginDrawing();
+        ClearBackground(BLACK);
+        if(fontLoaded){
+            const int index = static_cast<int>((GetTime() - startedAt) / secondsPerCharacter) % count;
+            int byteCount = 0;
+            const char* utf8 = CodepointToUTF8(codepoints[index], &byteCount);
+            const string character(utf8, byteCount);
+            const Vector2 textSize = MeasureTextEx(chineseFont, character.c_str(), fontSize, 0);
+            const Vector2 position = {
+                (GetScreenWidth() - textSize.x) / 2.0f,
+                (GetScreenHeight() - textSize.y) / 2.0f
+            };
+            DrawTextEx(chineseFont, character.c_str(), position, fontSize, 0, WHITE);
+        }else{
+            DrawText("Chinese font could not be loaded:", 100, 100, 30, WHITE);
+            DrawText(fontPath, 100, 150, 20, WHITE);
+        }
+        DrawText("Press Q to return to menu", 40, GetScreenHeight() - 60, 24, BLUE);
+        EndDrawing();
+        if(backToMenu) break;
+    }
+
+    if(fontLoaded) UnloadFont(chineseFont);
+    UnloadCodepoints(codepoints);
+}
 /*======================MenuPage設計======================*/
 int menuPage(Page &page , int mapp[][map_width]){ //待完成
     /*===============設置文字大小、間距、位置等等===============*/
@@ -70,6 +125,8 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
     const int size = 40;
     const int button_x = x-50; 
     int button_y = y;
+    int egg = 0;
+    const int eggKeys[] = {KEY_C, KEY_S, KEY_E, KEY_THREE, KEY_TWO, KEY_SIX};
     /*===============選單===============*/
     while(!WindowShouldClose()){
         BeginDrawing();
@@ -97,7 +154,20 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
         else if(IsKeyPressed(KEY_DOWN))button_y = y;
         if(IsKeyPressed(KEY_SPACE)){EndDrawing(); return((button_y-y)/size+1);}
         DrawText("->", button_x , button_y,size , BLUE);
-        EndDrawing(); 
+        int key = 0;
+        while((key = GetKeyPressed()) != 0){
+            // Accept both the number row and the numeric keypad.
+            if(key >= KEY_KP_0 && key <= KEY_KP_9)
+                key = KEY_ZERO + (key - KEY_KP_0);
+            if(key == eggKeys[egg]) ++egg;
+            else egg = (key == KEY_C) ? 1 : 0;
+            if(egg == 6) break;
+        }
+        EndDrawing();
+        if(egg == 6){
+            page = Page::Egg;
+            return 0;
+        } 
     }
     return 13;
 }
