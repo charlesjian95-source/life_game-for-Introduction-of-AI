@@ -5,6 +5,7 @@
 #include<vector>
 #include<raylib.h>
 #include<string>
+#include<fstream>
 
 using namespace std;
 
@@ -201,6 +202,20 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
 }
 /*======================初始化地圖======================*/
 void initMode(int mapp[][map_width] , int mode_ID){
+    const vector<string>mode_file = {
+        "block.txt",
+        "beehive.txt",
+        "blinker.txt",
+        "toad.txt",
+        "beacon.txt",
+        "pulsar.txt",
+        "glider.txt",
+        "lwss.txt",
+        "r_pentomino.txt",
+        "acorn.txt",
+        "gosper_glider_gun.txt",
+        "void.txt"
+    };
     //int mode_ID;
     /*
     cout << "input put mode you want";
@@ -219,6 +234,17 @@ void initMode(int mapp[][map_width] , int mode_ID){
     for(int i=0; i<map_height; i++){
         for(int j=0; j<map_width; j++){mapp[i][j]=0;}
     }
+    if(mode_ID >0 && mode_ID <= mode_file.size()){
+        ifstream file(mode_file[mode_ID]);
+        if(!file.is_open()){return;}
+        string line;
+        vector<string> template_map;
+        while(getline(file,line)){template_map.push_back(line);}
+        loadMap(template_map,mapp);
+    }
+    else{return;}
+
+    /*
     switch(mode_ID){
     case 1: { // Block
         vector<string> template_map = {
@@ -336,7 +362,7 @@ void initMode(int mapp[][map_width] , int mode_ID){
     case 12:{
         break;
     }
-    }
+    } */
     
 }
 
