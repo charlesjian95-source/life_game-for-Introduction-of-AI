@@ -235,7 +235,7 @@ void initMode(int mapp[][map_width] , int mode_ID){
         for(int j=0; j<map_width; j++){mapp[i][j]=0;}
     }
     if(mode_ID >0 && mode_ID <= mode_file.size()){
-        ifstream file(mode_file[mode_ID]);
+        ifstream file(mode_file[mode_ID-1]);
         if(!file.is_open()){return;}
         string line;
         vector<string> template_map;
