@@ -5,6 +5,7 @@
 #include<vector>
 #include<raylib.h>
 #include<string>
+#include<fstream>
 
 using namespace std;
 
@@ -201,6 +202,20 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
 }
 /*======================初始化地圖======================*/
 void initMode(int mapp[][map_width] , int mode_ID){
+    const vector<string>mode_file = {
+        "block.txt",
+        "beehive.txt",
+        "blinker.txt",
+        "toad.txt",
+        "beacon.txt",
+        "pulsar.txt",
+        "glider.txt",
+        "lwss.txt",
+        "r_pentomino.txt",
+        "acorn.txt",
+        "gosper_glider_gun.txt",
+        "void.txt"
+    };
     //int mode_ID;
     /*
     cout << "input put mode you want";
@@ -219,125 +234,15 @@ void initMode(int mapp[][map_width] , int mode_ID){
     for(int i=0; i<map_height; i++){
         for(int j=0; j<map_width; j++){mapp[i][j]=0;}
     }
-    switch(mode_ID){
-    case 1: { // Block
-        vector<string> template_map = {
-            "OO",
-            "OO"
-        };
-        loadMap(template_map, mapp);
-        break;
+    if(mode_ID >0 && mode_ID <= mode_file.size()){
+        ifstream file(mode_file[mode_ID]);
+        if(!file.is_open()){return;}
+        string line;
+        vector<string> template_map;
+        while(getline(file,line)){template_map.push_back(line);}
+        loadMap(template_map,mapp);
     }
-    case 2: { // Beehive
-        vector<string> template_map = {
-            ".OO.",
-            "O..O",
-            ".OO."
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 3: { // Blinker
-        vector<string> template_map = {
-            "OOO"
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 4: { // Toad
-        vector<string> template_map = {
-            ".OOO",
-            "OOO."
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 5: { // Beacon
-        vector<string> template_map = {
-            "OO..",
-            "OO..",
-            "..OO",
-            "..OO"
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 6: { // Pulsar
-        vector<string> template_map = {
-            "..OOO...OOO..",
-            ".............",
-            "O....O.O....O",
-            "O....O.O....O",
-            "O....O.O....O",
-            "..OOO...OOO..",
-            ".............",
-            "..OOO...OOO..",
-            "O....O.O....O",
-            "O....O.O....O",
-            "O....O.O....O",
-            ".............",
-            "..OOO...OOO.."
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 7: { // Glider
-        vector<string> template_map = {
-            ".O.",
-            "..O",
-            "OOO"
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 8: { // LWSS
-        vector<string> template_map = {
-            ".O..O",
-            "O....",
-            "O...O",
-            "OOOO."
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 9: { // R-pentomino
-        vector<string> template_map = {
-            ".OO",
-            "OO.",
-            ".O."
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 10: { // Acorn
-        vector<string> template_map = {
-            ".O.....",
-            "...O...",
-            "OO..OOO"
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 11: { // Gosper Glider Gun
-        vector<string> template_map = {
-            "........................O...........",
-            "......................O.O...........",
-            "............OO......OO............OO",
-            "...........O...O....OO............OO",
-            "OO........O.....O...OO..............",
-            "OO........O...O.OO....O.O...........",
-            "..........O.....O.......O...........",
-            "...........O...O....................",
-            "............OO......................"
-        };
-        loadMap(template_map, mapp);
-        break;
-    }
-    case 12:{
-        break;
-    }
-    }
-    
+    else{return;}
 }
 
 /*======================迭代函數======================*/
