@@ -44,12 +44,6 @@ int main()
     Page page = Page::Menu;//初始化頁面
     SetTargetFPS(20);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway"); //設定地圖大小跟標題名稱
-
-
-
-    
-
-    
 /*======================函數開始執行======================*/
     while(!WindowShouldClose()){
         switch(page){
