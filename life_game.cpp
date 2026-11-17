@@ -17,7 +17,8 @@ const int y = map_height*cell_size;
 int user_path = 20;
 
 enum class Page{ //使用的page
-    Menu,
+    Menu_1,
+    Menu_2,
     Game,
     Egg
 };
@@ -28,7 +29,8 @@ void buildBound(int mapp[][map_width]); //設置邊界 美觀用途(已停止使
 void initMode(int mapp[][map_width],int mode_ID); //初始化地圖 提供各模式選擇
 void loadMap(vector<string>template_map , int mapp[][map_width]);
 void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop);
-int menuPage(Page &page , int mapp[][map_width]);
+int menuPage1(Page &page , int mapp[][map_width]);
+int menuPage2(Page &page);
 void eggPage();
 
 
@@ -42,28 +44,35 @@ int main()
     int user_x = 40 , user_y = 40;
     int mode = 0;
     
-    Page page = Page::Menu;//初始化頁面
+    Page page = Page::Menu_1;//初始化頁面
     SetTargetFPS(20);//設定frame數 太大的話會迭代太快
     InitWindow(x,y,"conway"); //設定地圖大小跟標題名稱
 /*======================函數開始執行======================*/
     while(!WindowShouldClose()){
         switch(page){
-            case Page::Menu :{
-                mode = menuPage(page,mapp);
+            case Page::Menu_1 :{
+                mode = menuPage1(page,mapp);
                 if(page == Page::Egg) break;
                 if(mode == 13){CloseWindow(); return 0;}
+                if(mode == 101){break;} //進入page2
                 initMode(mapp,mode);
+                page = Page::Game;
+                break;
+            }
+            case Page::Menu_2 :{
+                mode = menuPage2(page);
+                if(mode == 101){break;}
                 page = Page::Game;
                 break;
             }
             case Page::Game :{
                 gamePage(mapp,user_x,user_y,time_stop);
-                page = Page::Menu;
+                page = Page::Menu_1;
                 break;
             }
             case Page::Egg :{
                 eggPage();
-                page = Page::Menu;
+                page = Page::Menu_1;
                 break;
             }
         }
@@ -71,6 +80,27 @@ int main()
     CloseWindow();
 }
 /*======================主程式結束======================*/
+int menuPage2(Page &page){
+    /*===============設置文字大小、間距、位置等等===============*/
+    const int x =400;
+    const int y = 300, d = 40; //d是間距
+    const int size = 40;
+    const int button_x = x-50; 
+    int button_y = y;
+
+    /*===============選單===============*/
+    while(!WindowShouldClose())
+    {
+        BeginDrawing();
+        ClearBackground(BLACK);
+        DrawText("Conway's life game" , 325 , 100 , 60 , WHITE);
+        DrawText("Double mode",x,y-2*d, 50 , WHITE);
+        if(IsKeyPressed(KEY_LEFT)){page = Page::Menu_1;return 101;}
+        EndDrawing();
+    }
+    
+    
+}
 /*======================EggPage設計======================*/
 void eggPage(){
     const char* text = "蔡教授那麼帥應該會給我們一百分吧";
@@ -113,7 +143,7 @@ void eggPage(){
     UnloadCodepoints(codepoints);
 }
 /*======================MenuPage設計======================*/
-int menuPage(Page &page , int mapp[][map_width]){ //待完成
+int menuPage1(Page &page , int mapp[][map_width]){ //待完成
     /*===============設置文字大小、間距、位置等等===============*/
     const int x =400;
     const int y = 300, d = 40; //d是間距
@@ -126,6 +156,8 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
+        DrawText("Conway's life game" , 325 , 100 , 60 , WHITE);
+        DrawText("Single Mode" , x , y-2*d , 50 , WHITE);
         DrawText("1.Block" , x , y+0*d  , size , WHITE);
         DrawText("2.Beehive" , x , y+1*d  , size , WHITE);
         DrawText("3.Blinker" , x , y+2*d  , size , WHITE);
@@ -141,14 +173,21 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
         DrawText("QUIT" , x , y+12*d  , size , WHITE);
         DrawText("use up/down to move arrow" , x-100 ,y+13*d ,size , BLUE );
         DrawText("use Space to choose mode" , x-100 ,y+14*d ,size , BLUE );
+        DrawText("use RIGHT to enter double mode" , x-100 , y+15*d , size , BLUE);
 
         /*===============操作===============*/
         if(IsKeyPressed(KEY_UP) && button_y>y)button_y-=d;
         else if(IsKeyPressed(KEY_UP))button_y = y+12*d;
+
         if(IsKeyPressed(KEY_DOWN) && button_y<y+12*d)button_y+=d;
         else if(IsKeyPressed(KEY_DOWN))button_y = y;
+
         if(IsKeyPressed(KEY_SPACE)){EndDrawing(); return((button_y-y)/size+1);}
+
+        if(IsKeyPressed(KEY_RIGHT)){EndDrawing(); page = Page::Menu_2; return 101;} //切換到page2
+
         DrawText("->", button_x , button_y,size , BLUE);
+
         int key = 0;
         while((key = GetKeyPressed()) != 0){
             // Accept both the number row and the numeric keypad.
@@ -164,7 +203,7 @@ int menuPage(Page &page , int mapp[][map_width]){ //待完成
             return 0;
         } 
     }
-    return 13;
+    return 100;
 }
 /*======================gamePage設計======================*/
 void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
@@ -182,7 +221,7 @@ void gamePage(int mapp[][map_width],int &user_x , int &user_y,int &time_stop){
         for(int i=1; i<map_width-1; i++){ //接替showMap()
             for(int j=1; j<map_height-1; j++){
                 if(mapp[i][j]==1){
-                        DrawRectangle(j*cell_size,i*cell_size,cell_size-5,cell_size-5,WHITE);
+                        DrawRectangle(j*cell_size,i*cell_size,cell_size-5,cell_size-5,RED);
                 }
             }
         }
