@@ -53,7 +53,7 @@ int main()
             case Page::Menu_1 :{
                 mode = menuPage1(page,mapp);
                 if(page == Page::Egg) break;
-                if(mode == 13){CloseWindow(); return 0;}
+                if(mode == 13 || mode ==100){CloseWindow(); return 0;}
                 if(mode == 101){break;} //進入page2
                 initMode(mapp,mode);
                 page = Page::Game;
@@ -62,6 +62,7 @@ int main()
             case Page::Menu_2 :{
                 mode = menuPage2(page);
                 if(mode == 101){break;}
+                if(mode == 100){CloseWindow(); return 0;}
                 page = Page::Game;
                 break;
             }
@@ -98,8 +99,7 @@ int menuPage2(Page &page){
         if(IsKeyPressed(KEY_LEFT)){page = Page::Menu_1;return 101;}
         EndDrawing();
     }
-    
-    
+    return 100; //結束
 }
 /*======================EggPage設計======================*/
 void eggPage(){
@@ -156,7 +156,7 @@ int menuPage1(Page &page , int mapp[][map_width]){ //待完成
     while(!WindowShouldClose()){
         BeginDrawing();
         ClearBackground(BLACK);
-        DrawText("Conway's life game" , 325 , 100 , 60 , WHITE);
+           
         DrawText("Single Mode" , x , y-2*d , 50 , WHITE);
         DrawText("1.Block" , x , y+0*d  , size , WHITE);
         DrawText("2.Beehive" , x , y+1*d  , size , WHITE);
