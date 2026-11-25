@@ -81,7 +81,7 @@ Conway/
 
 ## 開發與編譯
 
-目前的 Windows 建置使用 MSYS2 UCRT64、GCC 與 raylib。原始碼位於 [`life_game.cpp`](life_game.cpp)。
+目前的 Windows 建置使用 MSYS2 UCRT64、GCC 與 raylib。主程式位於 [`life_game.cpp`](life_game.cpp)。選單、遊戲畫面、彩蛋與地圖邏輯分別位於 `menu.cpp`、`game.cpp`、`egg.cpp`、`life_map.cpp`，共用設定位於 `config.h`。
 
 ### 安裝依賴
 
@@ -102,7 +102,7 @@ pacman -S --needed mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-raylib
 在 UCRT64 終端機切換至專案根目錄，執行：
 
 ```bash
-g++ -std=c++17 -O2 life_game.cpp -o life_game.exe -lraylib -lopengl32 -lgdi32 -lwinmm
+g++ -std=c++17 -O2 life_game.cpp menu.cpp game.cpp egg.cpp life_map.cpp -o life_game.exe -lraylib -lopengl32 -lgdi32 -lwinmm
 ./life_game.exe
 ```
 
